@@ -4,7 +4,6 @@ using System.Collections;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public float attack1Duration = 1f;
     public float attack2Duration = 1.5f;
     public float attack2Delay = 0.3f;
 
@@ -66,12 +65,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void HandleStandardAttacks()
     {
-        if (attackAction != null && attackAction.action != null && attackAction.action.WasPressedThisFrame())
-        {
-            AlignPlayerWithCamera();
-            StartCoroutine(AttackRoutine("Attack", false, attack1Duration));
-        }
-        else if (attack2Action != null && attack2Action.action != null && attack2Action.action.WasPressedThisFrame())
+        if (attack2Action != null && attack2Action.action != null && attack2Action.action.WasPressedThisFrame())
         {
             AlignPlayerWithCamera();
             StartCoroutine(AttackRoutine("Attack2", true, attack2Duration));
