@@ -797,6 +797,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1215081989671865107}
+    - target: {fileID: 5911803434258551514, guid: 82533cf344add934ba4912b3be5173a7, type: 3}
+      propertyPath: collisionLayers.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7529486811504442158, guid: 82533cf344add934ba4912b3be5173a7, type: 3}
       propertyPath: m_Name
       value: Main Camera
