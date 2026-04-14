@@ -1,24 +1,26 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float rotationSpeed = 10f;
-    public float gravityMultiplier = 1f;
     public Transform cameraTransform;
     public InputActionReference moveAction;
-    
-    [Header("Configurações de Pulo e Gravidade")]
-    public float baseMoveSpeed = 5f; // Mantido para backup se necessário
-    public float jumpHeight = 2.5f;
-    public float jumpDuration = 2f; // Tempo total no ar (subida + descida)
-    
+
+    [Header("Configuracoes de Pulo")]
+    public float jumpHeight = 1.5f;
+    public float gravity = -15f;
+    public float jumpDelay = 0.15f;
+
     private CharacterController controller;
     private Animator animator;
     private PlayerAttack playerAttack;
-    public float velocityY; // Agora público para controle externo (ex: voar)
+
+    private float velocityY;
+    private bool isJumping = false;
 
     void Start()
     {
@@ -30,38 +32,45 @@ public class PlayerMovement : MonoBehaviour
         {
             cameraTransform = Camera.main.transform;
         }
-
-        // Se quiser que a velocidade definida no inspector seja a base
-        baseMoveSpeed = moveSpeed;
     }
 
     void Update()
     {
-        // === FÍSICA E PULO ===
-        if (controller.isGrounded && velocityY < 0f)
-        {
-            velocityY = -2f; // Mantém o jogador preso ao chão suavemente
+        bool isCurrentlyGrounded = controller.isGrounded && !isJumping;
 
-            // Lógica do pulo se apertar Espaço e estiver no chão
-            if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (animator != null)
+        {
+            animator.SetBool("IsGrounded", isCurrentlyGrounded);
+        }
+
+        Vector2 inputVector = Vector2.zero;
+
+        if (moveAction != null && moveAction.action != null)
+        {
+            inputVector = moveAction.action.ReadValue<Vector2>();
+        }
+
+        bool isStandingStill = inputVector.magnitude < 0.1f;
+
+        if (controller.isGrounded && velocityY < 0f && !isJumping)
+        {
+            velocityY = -2f;
+
+            if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && isStandingStill)
             {
-                // Fórmula física: velocity = g * tempo_de_subida; onde g = gravidade customizada
-                // Para ter um pulo de X m em Y seg (tempo subida = Y/2):
-                float timeToPeak = jumpDuration / 2f;
-                // Calculamos a vel. inicial baseada no tempo de subida e na altura
-                velocityY = (2f * jumpHeight) / timeToPeak;
-                
-                // if (animator != null) animator.SetTrigger("Jump");
+                isJumping = true;
+
+                if (animator != null)
+                {
+                    animator.SetTrigger("Jump");
+                }
+
+                StartCoroutine(JumpRoutine());
             }
         }
 
-        // Calcula a gravidade customizada baseado na altura e tempo requerido
-        // Isso fará seu pulo durar exatos 2 segundos subindo e descendo 2.5m
-        float customGravity = (-8f * jumpHeight) / (jumpDuration * jumpDuration);
-        
-        velocityY += customGravity * Time.deltaTime;
+        velocityY += gravity * Time.deltaTime;
 
-        // === ATAQUE ===
         if (playerAttack != null && playerAttack.IsAttacking)
         {
             controller.Move(new Vector3(0f, velocityY, 0f) * Time.deltaTime);
@@ -74,7 +83,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        Vector2 inputVector = moveAction.action.ReadValue<Vector2>();
         Vector3 inputDirection = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
         Vector3 moveDirection = Vector3.zero;
 
@@ -87,31 +95,42 @@ public class PlayerMovement : MonoBehaviour
 
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
-            // Verifica se o Shift está sendo sendo pressionado (Hold para correr)
             float currentSpeed = moveSpeed;
-            if (Keyboard.current != null && Keyboard.current.shiftKey.isPressed)
+            bool isRunningInput = Keyboard.current != null && Keyboard.current.shiftKey.isPressed;
+
+            if (isRunningInput)
             {
                 currentSpeed = moveSpeed * 2f;
-                // Se tiver animação de correr, você pode colocar aqui:
-                // if (animator != null) animator.SetBool("IsRunning", true);
             }
-            
-            moveDirection = moveDirection.normalized * currentSpeed;
 
             if (animator != null)
             {
-                animator.SetBool("IsWalking", true);
+                animator.SetBool("IsRunning", isRunningInput && isCurrentlyGrounded);
+                animator.SetBool("IsWalking", isCurrentlyGrounded);
             }
+
+            moveDirection = moveDirection.normalized * currentSpeed;
         }
         else
         {
             if (animator != null)
             {
                 animator.SetBool("IsWalking", false);
+                animator.SetBool("IsRunning", false);
             }
         }
 
         moveDirection.y = velocityY;
         controller.Move(moveDirection * Time.deltaTime);
+    }
+
+    private IEnumerator JumpRoutine()
+    {
+        yield return new WaitForSeconds(jumpDelay);
+
+        velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+        yield return new WaitForSeconds(0.1f);
+        isJumping = false;
     }
 }

@@ -911,8 +911,24 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3458804709296679635, guid: ccbfe9d332f178942af4e1991306c72d, type: 3}
+      propertyPath: jumpDelay
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3458804709296679635, guid: ccbfe9d332f178942af4e1991306c72d, type: 3}
       propertyPath: moveSpeed
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3458804709296679635, guid: ccbfe9d332f178942af4e1991306c72d, type: 3}
+      propertyPath: velocityY
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3458804709296679635, guid: ccbfe9d332f178942af4e1991306c72d, type: 3}
+      propertyPath: jumpHeight
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3458804709296679635, guid: ccbfe9d332f178942af4e1991306c72d, type: 3}
+      propertyPath: jumpDuration
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3458804709296679635, guid: ccbfe9d332f178942af4e1991306c72d, type: 3}
       propertyPath: cameraTransform
