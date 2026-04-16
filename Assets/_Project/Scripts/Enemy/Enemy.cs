@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(CharacterController))]
 public class Enemy : MonoBehaviour
 {
     public int maxHealth = 30;
@@ -12,6 +13,7 @@ public class Enemy : MonoBehaviour
     public float chaseRange = 10f;
     public float attackDamage = 10f;
     public float attackCooldown = 1.5f;
+    public float gravity = -15f;
 
     public Transform[] patrolPoints;
     public float minWaitTime = 1f;
@@ -31,11 +33,15 @@ public class Enemy : MonoBehaviour
     private Camera mainCamera;
     private PlayerHealth playerHealth;
 
+    private CharacterController controller;
+    private float velocityY;
+
     void Start()
     {
         currentHealth = maxHealth;
         animator = GetComponentInChildren<Animator>();
         mainCamera = Camera.main;
+        controller = GetComponent<CharacterController>();
 
         if (healthBarFill != null)
         {
@@ -61,6 +67,12 @@ public class Enemy : MonoBehaviour
     {
         if (player == null || isDead) return;
 
+        if (controller.isGrounded && velocityY < 0)
+        {
+            velocityY = -2f;
+        }
+        velocityY += gravity * Time.deltaTime;
+
         if (playerHealth != null && playerHealth.IsDead)
         {
             if (animator != null)
@@ -76,6 +88,7 @@ public class Enemy : MonoBehaviour
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if (stateInfo.IsName("Attack") || stateInfo.IsName("Hit"))
             {
+                controller.Move(new Vector3(0, velocityY, 0) * Time.deltaTime);
                 return;
             }
         }
@@ -88,6 +101,8 @@ public class Enemy : MonoBehaviour
             {
                 animator.SetBool("IsWalking", false);
             }
+
+            controller.Move(new Vector3(0, velocityY, 0) * Time.deltaTime);
 
             if (Time.time >= lastAttackTime + attackCooldown)
             {
@@ -120,6 +135,7 @@ public class Enemy : MonoBehaviour
             {
                 animator.SetBool("IsWalking", false);
             }
+            controller.Move(new Vector3(0, velocityY, 0) * Time.deltaTime);
             return;
         }
 
@@ -132,6 +148,7 @@ public class Enemy : MonoBehaviour
                 isWaiting = false;
                 currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
             }
+            controller.Move(new Vector3(0, velocityY, 0) * Time.deltaTime);
             return;
         }
 
@@ -144,7 +161,9 @@ public class Enemy : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        Vector3 move = direction * moveSpeed;
+        move.y = velocityY;
+        controller.Move(move * Time.deltaTime);
 
         if (animator != null)
         {
@@ -181,7 +200,9 @@ public class Enemy : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        Vector3 move = direction * moveSpeed;
+        move.y = velocityY;
+        controller.Move(move * Time.deltaTime);
 
         if (animator != null)
         {
@@ -254,6 +275,11 @@ public class Enemy : MonoBehaviour
         if (collider != null)
         {
             collider.enabled = false;
+        }
+
+        if (controller != null)
+        {
+            controller.enabled = false;
         }
 
         Destroy(gameObject, 3f);
