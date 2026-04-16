@@ -41,6 +41,14 @@ public class PlayerMovement : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("IsGrounded", isCurrentlyGrounded);
+
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsName("Hit"))
+            {
+                velocityY += gravity * Time.deltaTime;
+                controller.Move(new Vector3(0f, velocityY, 0f) * Time.deltaTime);
+                return;
+            }
         }
 
         Vector2 inputVector = Vector2.zero;

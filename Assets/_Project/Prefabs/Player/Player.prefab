@@ -393,6 +393,7 @@ GameObject:
   - component: {fileID: 3458804709296679635}
   - component: {fileID: 4341713087602955216}
   - component: {fileID: 1020193879779775177}
+  - component: {fileID: 8995568182873359656}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -456,9 +457,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 10
-  gravityMultiplier: 1
   cameraTransform: {fileID: 0}
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  jumpHeight: 1.5
+  gravity: -15
+  jumpDelay: 0.15
 --- !u!114 &4341713087602955216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,7 +474,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc8ef5016568294bbf7520d5393cda9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack1Duration: 1
   attack2Duration: 1.5
   attack2Delay: 0.6
   aoeAttackDuration: 2
@@ -507,6 +509,21 @@ MonoBehaviour:
     m_Bits: 64
   lockOnAction: {fileID: 6064075695622966817, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   cameraScript: {fileID: 0}
+--- !u!114 &8995568182873359656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499445650903921953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82ab1b8ddbcac6448a75e9b074ffcb4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
+  healthBarFill: {fileID: 0}
 --- !u!1 &1516053265449216725
 GameObject:
   m_ObjectHideFlags: 0
