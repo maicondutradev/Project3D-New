@@ -436,13 +436,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3351010397087084706, guid: 48c4335c9b485ce49a9ab4f4f6f52150, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 279100273}
   m_SourcePrefab: {fileID: 100100000, guid: 48c4335c9b485ce49a9ab4f4f6f52150, type: 3}
 --- !u!4 &279100271 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3294208536604426464, guid: 48c4335c9b485ce49a9ab4f4f6f52150, type: 3}
   m_PrefabInstance: {fileID: 279100270}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &279100272 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3351010397087084706, guid: 48c4335c9b485ce49a9ab4f4f6f52150, type: 3}
+  m_PrefabInstance: {fileID: 279100270}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &279100273
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279100272}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &376478682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1429,6 +1453,7 @@ GameObject:
   - component: {fileID: 1114554587}
   - component: {fileID: 1114554586}
   - component: {fileID: 1114554585}
+  - component: {fileID: 1114554588}
   m_Layer: 3
   m_Name: Main_Terrain
   m_TagString: Untagged
@@ -1511,6 +1536,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1114554588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114554584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 2e3296a97fcb664429351f3b6b65d465, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &1236867339
 GameObject:
   m_ObjectHideFlags: 0
@@ -2411,12 +2468,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 30
   player: {fileID: 1215081989671865107}
-  moveSpeed: 3
   attackRange: 2
   chaseRange: 10
   attackDamage: 10
   attackCooldown: 1.5
-  gravity: -15
   patrolPoints:
   - {fileID: 2090430154}
   - {fileID: 112408829}
@@ -3711,7 +3766,7 @@ GameObject:
   - component: {fileID: 6431452124280146051}
   - component: {fileID: 1997156784}
   - component: {fileID: 6431452124280146052}
-  - component: {fileID: 6431452124280146053}
+  - component: {fileID: 6431452124280146054}
   m_Layer: 6
   m_Name: GanzSe_Enemy
   m_TagString: Untagged
@@ -26016,31 +26071,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.46221924, y: 1.8870229, z: 0.44696808}
   m_Center: {x: -0.011940002, y: 0.9173432, z: 0.0028495789}
---- !u!143 &6431452124280146053
-CharacterController:
+--- !u!195 &6431452124280146054
+NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 354350442688006211}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
+  m_AgentTypeID: 0
   m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &6432901266379081369
 GameObject:
   m_ObjectHideFlags: 0

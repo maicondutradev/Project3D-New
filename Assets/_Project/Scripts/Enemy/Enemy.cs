@@ -1,19 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
 {
     public int maxHealth = 30;
     private int currentHealth;
 
     public Transform player;
-    public float moveSpeed = 3f;
     public float attackRange = 2f;
     public float chaseRange = 10f;
     public float attackDamage = 10f;
     public float attackCooldown = 1.5f;
-    public float gravity = -15f;
 
     public Transform[] patrolPoints;
     public float minWaitTime = 1f;
@@ -33,15 +32,14 @@ public class Enemy : MonoBehaviour
     private Camera mainCamera;
     private PlayerHealth playerHealth;
 
-    private CharacterController controller;
-    private float velocityY;
+    private NavMeshAgent agent;
 
     void Start()
     {
         currentHealth = maxHealth;
         animator = GetComponentInChildren<Animator>();
         mainCamera = Camera.main;
-        controller = GetComponent<CharacterController>();
+        agent = GetComponent<NavMeshAgent>();
 
         if (healthBarFill != null)
         {
@@ -67,18 +65,9 @@ public class Enemy : MonoBehaviour
     {
         if (player == null || isDead) return;
 
-        if (controller.isGrounded && velocityY < 0)
-        {
-            velocityY = -2f;
-        }
-        velocityY += gravity * Time.deltaTime;
-
         if (playerHealth != null && playerHealth.IsDead)
         {
-            if (animator != null)
-            {
-                animator.SetBool("IsWalking", false);
-            }
+            if (animator != null) animator.SetBool("IsWalking", false);
             Patrol();
             return;
         }
@@ -88,21 +77,26 @@ public class Enemy : MonoBehaviour
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if (stateInfo.IsName("Attack") || stateInfo.IsName("Hit"))
             {
-                controller.Move(new Vector3(0, velocityY, 0) * Time.deltaTime);
+                agent.isStopped = true;
                 return;
             }
         }
+
+        agent.isStopped = false;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         if (distanceToPlayer <= attackRange)
         {
-            if (animator != null)
-            {
-                animator.SetBool("IsWalking", false);
-            }
+            agent.isStopped = true;
+            if (animator != null) animator.SetBool("IsWalking", false);
 
-            controller.Move(new Vector3(0, velocityY, 0) * Time.deltaTime);
+            Vector3 direction = (player.position - transform.position).normalized;
+            direction.y = 0;
+            if (direction != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(direction);
+            }
 
             if (Time.time >= lastAttackTime + attackCooldown)
             {
@@ -131,83 +125,41 @@ public class Enemy : MonoBehaviour
     {
         if (patrolPoints.Length == 0)
         {
-            if (animator != null)
-            {
-                animator.SetBool("IsWalking", false);
-            }
-            controller.Move(new Vector3(0, velocityY, 0) * Time.deltaTime);
+            if (animator != null) animator.SetBool("IsWalking", false);
             return;
         }
 
         if (isWaiting)
         {
             waitTimer += Time.deltaTime;
-
             if (waitTimer >= currentWaitDuration)
             {
                 isWaiting = false;
                 currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
             }
-            controller.Move(new Vector3(0, velocityY, 0) * Time.deltaTime);
             return;
         }
 
-        Transform targetPoint = patrolPoints[currentPatrolIndex];
-        Vector3 targetPositionFlat = new Vector3(targetPoint.position.x, transform.position.y, targetPoint.position.z);
-        Vector3 direction = (targetPositionFlat - transform.position).normalized;
+        agent.SetDestination(patrolPoints[currentPatrolIndex].position);
 
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
+        if (animator != null) animator.SetBool("IsWalking", true);
 
-        Vector3 move = direction * moveSpeed;
-        move.y = velocityY;
-        controller.Move(move * Time.deltaTime);
-
-        if (animator != null)
-        {
-            animator.SetBool("IsWalking", true);
-        }
-
-        float distanceToPoint = Vector3.Distance(
-            new Vector3(transform.position.x, 0, transform.position.z),
-            new Vector3(targetPoint.position.x, 0, targetPoint.position.z)
-        );
-
-        if (distanceToPoint < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.2f)
         {
             isWaiting = true;
             waitTimer = 0f;
             currentWaitDuration = Random.Range(minWaitTime, maxWaitTime);
 
-            if (animator != null)
-            {
-                animator.SetBool("IsWalking", false);
-            }
+            if (animator != null) animator.SetBool("IsWalking", false);
         }
     }
 
     private void ChasePlayer()
     {
         isWaiting = false;
+        agent.SetDestination(player.position);
 
-        Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0;
-
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
-
-        Vector3 move = direction * moveSpeed;
-        move.y = velocityY;
-        controller.Move(move * Time.deltaTime);
-
-        if (animator != null)
-        {
-            animator.SetBool("IsWalking", true);
-        }
+        if (animator != null) animator.SetBool("IsWalking", true);
     }
 
     private void AttackPlayer()
@@ -271,15 +223,15 @@ public class Enemy : MonoBehaviour
             animator.SetTrigger("Die");
         }
 
+        if (agent != null)
+        {
+            agent.enabled = false;
+        }
+
         Collider collider = GetComponent<Collider>();
         if (collider != null)
         {
             collider.enabled = false;
-        }
-
-        if (controller != null)
-        {
-            controller.enabled = false;
         }
 
         Destroy(gameObject, 3f);
