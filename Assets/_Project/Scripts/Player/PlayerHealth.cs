@@ -1,11 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float currentHealth;
     public Image healthBarFill;
+
+    public Image gameOverScreen;
+    public float fadeDuration = 1.5f;
+    public float restartDelay = 2f;
 
     public bool IsDead { get; private set; }
 
@@ -16,6 +22,14 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         animator = GetComponentInChildren<Animator>();
         UpdateHealthUI();
+
+        if (gameOverScreen != null)
+        {
+            gameOverScreen.gameObject.SetActive(false);
+            Color c = gameOverScreen.color;
+            c.a = 0f;
+            gameOverScreen.color = c;
+        }
     }
 
     public void TakeDamage(float amount)
@@ -80,5 +94,29 @@ public class PlayerHealth : MonoBehaviour
         {
             controller.enabled = false;
         }
+
+        StartCoroutine(GameOverRoutine());
+    }
+
+    private IEnumerator GameOverRoutine()
+    {
+        if (gameOverScreen != null)
+        {
+            gameOverScreen.gameObject.SetActive(true);
+            Color color = gameOverScreen.color;
+
+            for (float t = 0; t < fadeDuration; t += Time.deltaTime)
+            {
+                color.a = Mathf.Lerp(0, 1, t / fadeDuration);
+                gameOverScreen.color = color;
+                yield return null;
+            }
+
+            color.a = 1;
+            gameOverScreen.color = color;
+        }
+
+        yield return new WaitForSeconds(restartDelay);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
