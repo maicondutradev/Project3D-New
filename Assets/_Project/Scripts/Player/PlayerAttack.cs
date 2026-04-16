@@ -6,10 +6,12 @@ public class PlayerAttack : MonoBehaviour
 {
     public float attack2Duration = 1.5f;
     public float attack2Delay = 0.3f;
+    public float attack2Cooldown = 5f;
 
     public float aoeAttackDuration = 2f;
     public float aoeAttackDelay = 0.5f;
     public float aoePrefabLifetime = 5f;
+    public float aoeAttackCooldown = 8f;
 
     public Transform cameraTransform;
     public InputActionReference attackAction;
@@ -24,12 +26,17 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask groundLayer;
     public float maxAoeDistance = 20f;
 
+    public SkillUIManager skillUI;
+
     private Animator animator;
     public bool IsAttacking { get; private set; }
     public bool IsAimingAoE { get; private set; }
 
     private GameObject currentAoeIndicator;
     private Vector3 savedAoEPosition;
+
+    private float attack2Timer = 0f;
+    private float aoeAttackTimer = 0f;
 
     void Start()
     {
@@ -43,7 +50,19 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if (attack3Action != null && attack3Action.action != null && attack3Action.action.WasPressedThisFrame() && !IsAttacking)
+        if (attack2Timer > 0)
+        {
+            attack2Timer -= Time.deltaTime;
+            if (skillUI != null) skillUI.UpdateSkillCooldown(1, attack2Timer, attack2Cooldown);
+        }
+
+        if (aoeAttackTimer > 0)
+        {
+            aoeAttackTimer -= Time.deltaTime;
+            if (skillUI != null) skillUI.UpdateSkillCooldown(2, aoeAttackTimer, aoeAttackCooldown);
+        }
+
+        if (attack3Action != null && attack3Action.action != null && attack3Action.action.WasPressedThisFrame() && !IsAttacking && aoeAttackTimer <= 0)
         {
             ToggleAoeAiming();
         }
@@ -65,9 +84,10 @@ public class PlayerAttack : MonoBehaviour
 
     private void HandleStandardAttacks()
     {
-        if (attack2Action != null && attack2Action.action != null && attack2Action.action.WasPressedThisFrame())
+        if (attack2Action != null && attack2Action.action != null && attack2Action.action.WasPressedThisFrame() && attack2Timer <= 0)
         {
             AlignPlayerWithCamera();
+            attack2Timer = attack2Cooldown;
             StartCoroutine(AttackRoutine("Attack2", true, attack2Duration));
         }
     }
@@ -131,6 +151,7 @@ public class PlayerAttack : MonoBehaviour
         }
 
         AlignPlayerWithCamera();
+        aoeAttackTimer = aoeAttackCooldown;
         StartCoroutine(AoEAttackRoutine());
     }
 
