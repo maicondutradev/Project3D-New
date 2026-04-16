@@ -102,6 +102,37 @@ Transform:
   - {fileID: 1250430175480889938}
   m_Father: {fileID: 6049572028418671049}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &583928621266296348
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7462008763873874577}
+  m_Layer: 0
+  m_Name: SpawPointBuff
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7462008763873874577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583928621266296348}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 339953107954585163}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &597965920687173745
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,6 +447,7 @@ Transform:
   m_Children:
   - {fileID: 1074596682629655475}
   - {fileID: 957204002999338257}
+  - {fileID: 7462008763873874577}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &216254485452898291
@@ -476,13 +508,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attack2Duration: 1.5
   attack2Delay: 0.6
+  attack2Cooldown: 5
   aoeAttackDuration: 2
   aoeAttackDelay: 0.5
   aoePrefabLifetime: 5
+  aoeAttackCooldown: 8
+  buffCastTime: 3
+  buffDuration: 5
+  buffCooldown: 15
+  buffDamageBonus: 10
   cameraTransform: {fileID: 0}
   attackAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   attack2Action: {fileID: -1376925509989497699, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   attack3Action: {fileID: 7109491649736344819, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  buffAction: {fileID: 0}
   attack2Prefab: {fileID: 3156866507962234106, guid: 645ebd7cef59b7b40b27c29bf3e99cf2, type: 3}
   attack2SpawnPoint: {fileID: 957204002999338257}
   aoeIndicatorPrefab: {fileID: 5564734886808383630, guid: 718dd2fd7fc6e124abcf2faff80eb6ea, type: 3}
@@ -491,6 +530,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   maxAoeDistance: 20
+  buffParticlePrefab: {fileID: 0}
+  buffSpawnPoint: {fileID: 0}
+  skillUI: {fileID: 0}
 --- !u!114 &1020193879779775177
 MonoBehaviour:
   m_ObjectHideFlags: 0

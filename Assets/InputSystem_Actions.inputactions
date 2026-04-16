@@ -113,6 +113,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Attack4",
+                    "type": "Button",
+                    "id": "157512c4-a8b8-40cb-a8a6-16d6c5f5b586",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -553,6 +562,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Attack3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f4337ebe-2ee3-41f9-b197-6632e3736696",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Attack4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -13,10 +13,16 @@ public class PlayerAttack : MonoBehaviour
     public float aoePrefabLifetime = 5f;
     public float aoeAttackCooldown = 8f;
 
+    public float buffCastTime = 3f;
+    public float buffDuration = 5f;
+    public float buffCooldown = 15f;
+    public int buffDamageBonus = 10;
+
     public Transform cameraTransform;
     public InputActionReference attackAction;
     public InputActionReference attack2Action;
     public InputActionReference attack3Action;
+    public InputActionReference buffAction;
 
     public GameObject attack2Prefab;
     public Transform attack2SpawnPoint;
@@ -26,17 +32,22 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask groundLayer;
     public float maxAoeDistance = 20f;
 
+    public GameObject buffParticlePrefab;
+    public Transform buffSpawnPoint;
+
     public SkillUIManager skillUI;
 
     private Animator animator;
     public bool IsAttacking { get; private set; }
     public bool IsAimingAoE { get; private set; }
+    public bool IsBuffActive { get; private set; }
 
     private GameObject currentAoeIndicator;
     private Vector3 savedAoEPosition;
 
     private float attack2Timer = 0f;
     private float aoeAttackTimer = 0f;
+    private float buffTimer = 0f;
 
     void Start()
     {
@@ -50,16 +61,13 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if (attack2Timer > 0)
-        {
-            attack2Timer -= Time.deltaTime;
-            if (skillUI != null) skillUI.UpdateSkillCooldown(1, attack2Timer, attack2Cooldown);
-        }
+        UpdateCooldowns();
 
-        if (aoeAttackTimer > 0)
+        if (buffAction != null && buffAction.action != null && buffAction.action.WasPressedThisFrame() && buffTimer <= 0 && !IsAttacking)
         {
-            aoeAttackTimer -= Time.deltaTime;
-            if (skillUI != null) skillUI.UpdateSkillCooldown(2, aoeAttackTimer, aoeAttackCooldown);
+            buffTimer = buffCooldown;
+            StartCoroutine(BuffRoutine());
+            return;
         }
 
         if (attack3Action != null && attack3Action.action != null && attack3Action.action.WasPressedThisFrame() && !IsAttacking && aoeAttackTimer <= 0)
@@ -79,6 +87,27 @@ public class PlayerAttack : MonoBehaviour
         else if (!IsAttacking)
         {
             HandleStandardAttacks();
+        }
+    }
+
+    private void UpdateCooldowns()
+    {
+        if (attack2Timer > 0)
+        {
+            attack2Timer -= Time.deltaTime;
+            if (skillUI != null) skillUI.UpdateSkillCooldown(1, attack2Timer, attack2Cooldown);
+        }
+
+        if (aoeAttackTimer > 0)
+        {
+            aoeAttackTimer -= Time.deltaTime;
+            if (skillUI != null) skillUI.UpdateSkillCooldown(2, aoeAttackTimer, aoeAttackCooldown);
+        }
+
+        if (buffTimer > 0)
+        {
+            buffTimer -= Time.deltaTime;
+            if (skillUI != null) skillUI.UpdateSkillCooldown(3, buffTimer, buffCooldown);
         }
     }
 
@@ -180,6 +209,16 @@ public class PlayerAttack : MonoBehaviour
         {
             yield return new WaitForSeconds(attack2Delay);
             GameObject attack2Instance = Instantiate(attack2Prefab, attack2SpawnPoint.position, attack2SpawnPoint.rotation);
+
+            if (IsBuffActive)
+            {
+                DamageHitbox hitbox = attack2Instance.GetComponentInChildren<DamageHitbox>();
+                if (hitbox != null)
+                {
+                    hitbox.damage += buffDamageBonus;
+                }
+            }
+
             Destroy(attack2Instance, attack2Duration);
 
             yield return new WaitForSeconds(currentAttackDuration - attack2Delay);
@@ -207,11 +246,49 @@ public class PlayerAttack : MonoBehaviour
         if (aoeAttackPrefab != null)
         {
             GameObject aoeEffect = Instantiate(aoeAttackPrefab, savedAoEPosition, Quaternion.identity);
+
+            if (IsBuffActive)
+            {
+                AoeDamageArea aoeArea = aoeEffect.GetComponentInChildren<AoeDamageArea>();
+                if (aoeArea != null)
+                {
+                    aoeArea.minDamage += buffDamageBonus;
+                    aoeArea.maxDamage += buffDamageBonus;
+                }
+            }
+
             Destroy(aoeEffect, aoePrefabLifetime);
         }
 
         yield return new WaitForSeconds(aoeAttackDuration - aoeAttackDelay);
 
         IsAttacking = false;
+    }
+
+    private IEnumerator BuffRoutine()
+    {
+        IsAttacking = true;
+
+        if (animator != null)
+        {
+            animator.SetBool("IsWalking", false);
+            animator.SetTrigger("Buff");
+        }
+
+        if (buffParticlePrefab != null)
+        {
+            Transform spawnLoc = buffSpawnPoint != null ? buffSpawnPoint : transform;
+            GameObject particles = Instantiate(buffParticlePrefab, spawnLoc.position, spawnLoc.rotation, transform);
+            Destroy(particles, buffCastTime);
+        }
+
+        yield return new WaitForSeconds(buffCastTime);
+
+        IsAttacking = false;
+        IsBuffActive = true;
+
+        yield return new WaitForSeconds(buffDuration);
+
+        IsBuffActive = false;
     }
 }
