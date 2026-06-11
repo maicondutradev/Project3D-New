@@ -117,6 +117,6 @@ public class PlayerHealth : MonoBehaviour
         }
 
         yield return new WaitForSeconds(restartDelay);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(0);
     }
 }
