@@ -6149,6 +6149,7 @@ MonoBehaviour:
   maxWaitTime: 4
   healthBarFill: {fileID: 5527558563912823757}
   uiContainer: {fileID: 7069150671569285552}
+  itemDropPrefab: {fileID: 6661386415432680621, guid: dd8a8447e6cd2fb46a2c9214e6253530, type: 3}
 --- !u!65 &8297903958455214763
 BoxCollider:
   m_ObjectHideFlags: 0

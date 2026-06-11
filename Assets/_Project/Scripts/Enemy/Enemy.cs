@@ -21,6 +21,8 @@ public class Enemy : MonoBehaviour
     public Image healthBarFill;
     public Transform uiContainer;
 
+    public GameObject itemDropPrefab;
+
     private int currentPatrolIndex = 0;
     private bool isWaiting = false;
     private float waitTimer = 0f;
@@ -232,6 +234,11 @@ public class Enemy : MonoBehaviour
         if (collider != null)
         {
             collider.enabled = false;
+        }
+
+        if (itemDropPrefab != null)
+        {
+            Instantiate(itemDropPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
         }
 
         Destroy(gameObject, 3f);
