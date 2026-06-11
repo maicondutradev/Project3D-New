@@ -15,6 +15,13 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -15f;
     public float jumpDelay = 0.15f;
 
+    [Header("Sons de Passo")]
+    public AudioClip[] footstepSounds;
+    public float walkStepInterval = 0.5f;
+    public float runStepInterval = 0.3f;
+    private AudioSource audioSource;
+    private float footstepTimer = 0f;
+
     private CharacterController controller;
     private Animator animator;
     private PlayerAttack playerAttack;
@@ -27,6 +34,11 @@ public class PlayerMovement : MonoBehaviour
         controller = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         playerAttack = GetComponent<PlayerAttack>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
 
         if (cameraTransform == null)
         {
@@ -117,10 +129,27 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("IsWalking", isCurrentlyGrounded);
             }
 
+            if (isCurrentlyGrounded)
+            {
+                footstepTimer -= Time.deltaTime;
+                if (footstepTimer <= 0f)
+                {
+                    if (footstepSounds != null && footstepSounds.Length > 0)
+                    {
+                        AudioClip clip = footstepSounds[Random.Range(0, footstepSounds.Length)];
+                        audioSource.pitch = Random.Range(0.85f, 1.15f);
+                        audioSource.volume = Random.Range(0.8f, 1.0f);
+                        audioSource.PlayOneShot(clip);
+                    }
+                    footstepTimer = isRunningInput ? runStepInterval : walkStepInterval;
+                }
+            }
+
             moveDirection = moveDirection.normalized * currentSpeed;
         }
         else
         {
+            footstepTimer = 0f;
             if (animator != null)
             {
                 animator.SetBool("IsWalking", false);

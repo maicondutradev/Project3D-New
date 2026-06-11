@@ -494,6 +494,10 @@ MonoBehaviour:
   jumpHeight: 1.5
   gravity: -15
   jumpDelay: 0.15
+  footstepSounds:
+  - {fileID: 8300000, guid: 161d5a427e88d594f9906708ccdc5663, type: 3}
+  walkStepInterval: 0.5
+  runStepInterval: 0.3
 --- !u!114 &4341713087602955216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -566,6 +570,9 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   healthBarFill: {fileID: 0}
+  gameOverScreen: {fileID: 0}
+  fadeDuration: 1.5
+  restartDelay: 2
 --- !u!1 &1516053265449216725
 GameObject:
   m_ObjectHideFlags: 0
