@@ -1975,8 +1975,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "MAGO ARCANO\n\nConceito, programa\xE7\xE3o e dire\xE7\xE3o criativa\nErick
-    Matheus\n\nMenu constru\xEDdo com Unity Canvas e o novo Input System."
+  m_Text: "MAGO ARCANO\n\nConceito, programa\xE7\xE3o e dire\xE7\xE3o criativa.\n\nAssets
+    Unity Store.\n\nMenu constru\xEDdo com Unity Canvas."
 --- !u!222 &487532590
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2270,10 +2270,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1366838218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 224.7, y: -625}
-  m_SizeDelta: {x: 356, y: 69}
+  m_AnchorMin: {x: 0.11812499, y: 0.13444445}
+  m_AnchorMax: {x: 0.33625, y: 0.21444446}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 7, y: -3}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &602238256
 MonoBehaviour:
@@ -2647,10 +2647,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1366838218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 225.7, y: -557.9}
-  m_SizeDelta: {x: 356, y: 69}
+  m_AnchorMin: {x: 0.110624984, y: 0.21444446}
+  m_AnchorMax: {x: 0.34500003, y: 0.29555556}
+  m_AnchoredPosition: {x: 15, y: -2}
+  m_SizeDelta: {x: -19, y: -4}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &691274523
 MonoBehaviour:
@@ -3306,10 +3306,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1366838218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 226.5, y: -368.3}
-  m_SizeDelta: {x: 356, y: 69}
+  m_AnchorMin: {x: 0.11812499, y: 0.46333328}
+  m_AnchorMax: {x: 0.34500003, y: 0.5477778}
+  m_AnchoredPosition: {x: 1, y: -6}
+  m_SizeDelta: {x: -7, y: -7}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &828054210
 MonoBehaviour:
@@ -3741,10 +3741,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1366838218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 232.6, y: -296.7}
-  m_SizeDelta: {x: 356, y: 70}
+  m_AnchorMin: {x: 0.110624984, y: 0.5477778}
+  m_AnchorMax: {x: 0.33625, y: 0.62333333}
+  m_AnchoredPosition: {x: 1, y: 0}
+  m_SizeDelta: {x: -5, y: 2}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &947845947
 MonoBehaviour:
@@ -3918,10 +3918,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1366838218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 228.3, y: -426.7}
-  m_SizeDelta: {x: 356, y: 69}
+  m_AnchorMin: {x: 0.11812499, y: 0.37666664}
+  m_AnchorMax: {x: 0.34500003, y: 0.46333328}
+  m_AnchoredPosition: {x: 4, y: -7}
+  m_SizeDelta: {x: -7, y: -9}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &962567386
 MonoBehaviour:
@@ -6362,10 +6362,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1366838218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 229.9, y: -495.4}
-  m_SizeDelta: {x: 356, y: 69}
+  m_AnchorMin: {x: 0.11812499, y: 0.29555556}
+  m_AnchorMax: {x: 0.34500003, y: 0.37666664}
+  m_AnchoredPosition: {x: 5, y: -2}
+  m_SizeDelta: {x: -7, y: -4}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1784230452
 MonoBehaviour:
