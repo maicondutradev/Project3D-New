@@ -50,16 +50,20 @@ public class ThirdPersonCamera : MonoBehaviour
         }
         else if (lookAction != null && lookAction.action != null)
         {
-            Vector2 lookInput = lookAction.action.ReadValue<Vector2>();
-
-            if (lookInput.sqrMagnitude > 0.01f)
+            // Impede a câmera de girar se o jogo estiver pausado ou se o mouse estiver liberado (ex: no menu de pausa)
+            if (Time.timeScale > 0f && Cursor.lockState == CursorLockMode.Locked)
             {
-                float inputX = invertX ? -lookInput.x : lookInput.x;
-                float inputY = invertY ? lookInput.y : -lookInput.y;
+                Vector2 lookInput = lookAction.action.ReadValue<Vector2>();
 
-                yaw += inputX * sensitivity;
-                pitch += inputY * sensitivity;
-                pitch = Mathf.Clamp(pitch, pitchMin, pitchMax);
+                if (lookInput.sqrMagnitude > 0.01f)
+                {
+                    float inputX = invertX ? -lookInput.x : lookInput.x;
+                    float inputY = invertY ? lookInput.y : -lookInput.y;
+
+                    yaw += inputX * sensitivity;
+                    pitch += inputY * sensitivity;
+                    pitch = Mathf.Clamp(pitch, pitchMin, pitchMax);
+                }
             }
         }
 
